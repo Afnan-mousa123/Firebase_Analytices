@@ -22,6 +22,8 @@ class Notes : AppCompatActivity() {
     private lateinit var list: ArrayList<Note_Item>
     lateinit var progressBar:ProgressBar
     lateinit var analytics:FirebaseAnalytics
+    private var startTime: Long = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_notes)
@@ -46,6 +48,27 @@ class Notes : AppCompatActivity() {
             trak_Nots("Notes","university")
 
         }
+
+        startTime = System.currentTimeMillis()
+
+    }
+
+    override fun onPause() {
+
+        val duration = System.currentTimeMillis() - startTime
+
+        db.collection("Time_screen2").add(
+            "Note screen" to duration
+        )
+            .addOnSuccessListener {
+                Log.e("Afn","add time success" )
+            }
+            .addOnFailureListener {
+                Log.e("Afn","Error add time success" )
+
+            }
+
+        super.onPause()
     }
         fun getData( itemId:Int){
             db.collection("Note").get()

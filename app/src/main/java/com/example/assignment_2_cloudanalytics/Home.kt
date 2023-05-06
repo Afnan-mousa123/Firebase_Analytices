@@ -25,6 +25,8 @@ class Home : AppCompatActivity() {
     lateinit var list: ArrayList<Home_Item>
     lateinit var progressBar :ProgressBar
     lateinit var analytics:FirebaseAnalytics
+    private var startTime: Long = 0
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,8 +61,28 @@ class Home : AppCompatActivity() {
             }
 
 
+        startTime = System.currentTimeMillis()
 
 
+
+    }
+
+    override fun onPause() {
+
+        val duration = System.currentTimeMillis() - startTime
+
+        db.collection("Time").add(
+            "Home screen" to duration
+        )
+            .addOnSuccessListener {
+                Log.e("Afn","add time success" )
+            }
+            .addOnFailureListener {
+                Log.e("Afn","Error add time success" )
+
+            }
+
+        super.onPause()
     }
     fun trak_Home (className:String, screenName:String){
 
